@@ -162,27 +162,25 @@ void TetrisWallpaper::Frame() {
           std::cout << "Killed a line with " << iconGrid->size.cx << " blocks!\n";
 
           for (long x = 0; x < iconGrid->size.cx; x++) {
-            for (size_t tileIndex = landedTiles.size() - 1; tileIndex >= 0; tileIndex--) {
-              auto& tile = landedTiles.at(tileIndex);
+            for (int tileIndex = landedTiles.size() - 1; tileIndex >= 0; tileIndex--) {
+              auto tile = landedTiles.at(tileIndex);
               bool deleted = false;
-              for (size_t i = tile->blocks.size() - 1; i >= 0; i--) {
+              for (int i = tile->blocks.size() - 1; i >= 0; i--) {
                 if (tile->pos.y + tile->blocks[i].y == y) {
-                  if (!deleted) {
-                    deleted = true;
-                    tile->Render(false);
-                  }
+                  tile->Render(false);
                   tile->blocks.erase(tile->blocks.begin() + i);
                 }
 
                 if (tile->blocks.size() == 0) {
                   landedTiles.erase(landedTiles.begin() + tileIndex);
+                  deleted = true;
                 }
                 
                 // TODO: Copy tile, split it
                 //auto& newTile = std::make_shared<TetrisTile>(tile);
                 //landedTiles.push_back(newTile);
               }
-              if (deleted)
+              if (!deleted)
                 tile->Render(true);
             }
           }
